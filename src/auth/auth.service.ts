@@ -1,3 +1,8 @@
+function parseExpires(val: unknown, fallback: string | number) {
+  if (typeof val === 'number') return val;
+  if (typeof val === 'string' && /^\d+[smhd]?$/.test(val)) return val;
+  return fallback;
+}
 import { Injectable, UnauthorizedException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -57,20 +62,20 @@ export class AuthService {
     const jwtSecret = this.cfg.get<string>('JWT_SECRET');
     if (!jwtSecret) throw new InternalServerErrorException('JWT_SECRET non configuré');
 
-    const accessExpires = this.cfg.get<string | number>('JWT_EXPIRES') ?? '15m';
-    const refreshExpires =
-      this.cfg.get<string | number>('JWT_REFRESH_EXPIRES') ??
-      this.cfg.get<string | number>('JWT_EXPIRES') ??
-      '7d';
+    const accessExpires = parseExpires(this.cfg.get('JWT_EXPIRES'), '15m');
+    const refreshExpires = parseExpires(
+      this.cfg.get('JWT_REFRESH_EXPIRES'),
+      this.cfg.get('JWT_EXPIRES') ?? '7d'
+    );
 
-    const access = await this.jwt.signAsync(payload as any, {
+    const access = await this.jwt.signAsync(payload, {
       secret: jwtSecret,
       expiresIn: accessExpires as any,
     });
 
     const refreshSecret = this.cfg.get<string>('JWT_REFRESH_SECRET') ?? jwtSecret;
 
-    const refresh = await this.jwt.signAsync(payload as any, {
+    const refresh = await this.jwt.signAsync(payload, {
       secret: refreshSecret,
       expiresIn: refreshExpires as any,
     });
