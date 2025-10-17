@@ -15,7 +15,7 @@ export default function SignupPage() {
     setErr(null);
     try {
       setBusy(true);
-      await signup(email.trim(), password);
+      await signup(email.trim(), password, email.split('@')[0]);
       nav("/", { replace: true });
     } catch (e: any) {
       setErr(e?.message || "Erreur à l’inscription");

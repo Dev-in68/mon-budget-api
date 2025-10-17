@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, Protected } from "@/utils/auth";
+import { AuthProvider } from "@/utils/auth";
+import Protected from "@/Pages/Protected";
 
 import { useState } from "react";
 import AppShell from "./components/Layout/AppShell";
@@ -17,7 +18,7 @@ function ShellWrapper() {
 
   return (
     <AppShell month={month} year={year} setMonth={setMonth} setYear={setYear}>
-      {/* Outlet est dans AppShell – on passe year/month aux pages si besoin */}
+      {/* Les pages sont rendues via Outlet dans AppShell */}
     </AppShell>
   );
 }
@@ -27,11 +28,11 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Auth publiques */}
+          {/* Routes publiques d'authentification */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
-          {/* Shell protégé */}
+          {/* Shell protégé avec sous-routes */}
           <Route
             path="/"
             element={
@@ -40,17 +41,13 @@ export default function App() {
               </Protected>
             }
           >
-            <Route
-              index
-              element={<DashboardPage year={0 as any} month={0 as any} />}
-            />
-            {/* Conseil simple : DashboardPage lit year/month via prop drilling depuis ShellWrapper */}
-            {/* Pour contourner le typage ici on passe any, ou adapte en context si tu préfères */}
+            <Route index element={<DashboardPage year={2024} month={10} />} />
             <Route path="revenus" element={<RevenusPage />} />
             <Route path="depenses" element={<DepensesPage />} />
             <Route path="password" element={<ChangePasswordPage />} />
           </Route>
 
+          {/* Redirection par défaut */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

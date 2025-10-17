@@ -4,12 +4,12 @@
     "paths": { "@/*": ["src/*"] },
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
+    "module": "ESNext",
     "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"]
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
-  "include": ["src", "vite.config.ts"],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "include": ["src", "vite.config.ts"]
 }

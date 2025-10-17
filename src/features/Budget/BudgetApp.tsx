@@ -152,9 +152,6 @@ export default function BudgetApp() {
         year={year}
         setMonth={setMonth}
         setYear={setYear}
-        userEmail={userEmail}
-        onSignOut={logout}
-        onChangePassword={goChangePassword}
       />
 
       {/* CONTENT */}

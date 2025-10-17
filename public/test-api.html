@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API - Debug</title>
+</head>
+<body>
+    <h1>🔧 Test de connexion API - Debug Mode</h1>
+    <button onclick="testAPI()">Tester API</button>
+    <div id="result">Initialisation...</div>
+    <div id="debug"></div>
+    
+    <script>
+        const resultDiv = document.getElementById('result');
+        const debugDiv = document.getElementById('debug');
+        
+        function log(message) {
+            console.log(message);
+            debugDiv.innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+        }
+        
+        async function testAPI() {
+            resultDiv.innerHTML = '⏳ Testing...';
+            resultDiv.style.color = 'orange';
+            
+            try {
+                log('🚀 Début du test API');
+                log('📍 URL cible: http://localhost:3000/api/auth/health');
+                
+                const response = await fetch('http://localhost:3000/api/auth/health', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                log('📡 Réponse reçue: ' + response.status + ' ' + response.statusText);
+                
+                const data = await response.json();
+                log('✅ Données reçues: ' + JSON.stringify(data));
+                
+                resultDiv.innerHTML = `✅ Success: ${JSON.stringify(data, null, 2)}`;
+                resultDiv.style.color = 'green';
+            } catch (error) {
+                log('❌ Erreur: ' + error.message);
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                resultDiv.style.color = 'red';
+            }
+        }
+        
+        // Test automatique au chargement
+        window.onload = () => {
+            log('🎯 Page chargée, lancement du test automatique');
+            testAPI();
+        };
+    </script>
+</body>
+</html>
