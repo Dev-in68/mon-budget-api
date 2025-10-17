@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // ou "postgresql" selon ton setup
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  name        String
+  password    String
+  budgets     Budget[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Category    Category[]
+  Transaction Transaction[]
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         CategoryType // INCOME or EXPENSE
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  amount     Decimal  @db.Decimal(10, 2)
+  date       DateTime
+  note       String?
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Budget {
+  id        Int      @id @default(autoincrement())
+  year      Int
+  month     Int
+  limit     Decimal  @db.Decimal(10, 2)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([year, month, userId])
+}
