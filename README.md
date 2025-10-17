@@ -1,3 +1,7 @@
+![CI](https://github.com/Dev-in68/mon-budget-api/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/github/license/Dev-in68/mon-budget-api)
+![GitHub issues](https://img.shields.io/github/issues/Dev-in68/mon-budget-api)
+![GitHub last commit](https://img.shields.io/github/last-commit/Dev-in68/mon-budget-api)
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
