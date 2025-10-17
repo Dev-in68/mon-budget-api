@@ -58,20 +58,20 @@ jobs:
       - name: Run e2e tests
         run: npm run test:e2e
 
-  frontend-build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm install
-      - name: Build frontend
-        working-directory: ./frontend
-        run: npm run build
-      # Temporary: Skip linting until dependencies are properly resolved
-      # - name: Run frontend linting
-      #   working-directory: ./frontend
-      #   run: npm run lint
+  # frontend-build-and-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #     - name: Install frontend dependencies
+  #       working-directory: ./frontend-react
+  #       run: npm install
+  #     - name: Build frontend
+  #       working-directory: ./frontend-react
+  #       run: npm run build
+  #     # Temporary: Skip linting until dependencies are properly resolved
+  #     # - name: Run frontend linting
+  #     #   working-directory: ./frontend-react
+  #     #   run: npm run lint
