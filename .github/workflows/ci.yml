@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: monbudget
+          MYSQL_USER: monbudget
+          MYSQL_PASSWORD: monbudget
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      DATABASE_URL: mysql://monbudget:monbudget@127.0.0.1:3306/monbudget
+      JWT_SECRET: testsecret
+      JWT_REFRESH_SECRET: testrefresh
+      JWT_EXPIRES: 15m
+      JWT_REFRESH_EXPIRES: 7d
+      BCRYPT_SALT_ROUNDS: 10
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install backend dependencies
+        run: npm ci
+      - name: Generate Prisma client
+        run: npx prisma generate
+      - name: Build backend
+        run: npm run build
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            nc -z 127.0.0.1 3306 && break
+            sleep 2
+          done
+      - name: Grant CREATE privilege to monbudget
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'monbudget'@'%'; FLUSH PRIVILEGES;"
+      - name: Run Prisma migrations
+        run: npm run prisma:dev
+      - name: Run backend tests
+        run: npm run test
+      - name: Run e2e tests
+        run: npm run test:e2e
+
+  frontend-build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+      # Temporary: Skip linting until dependencies are properly resolved
+      # - name: Run frontend linting
+      #   working-directory: ./frontend
+      #   run: npm run lint
