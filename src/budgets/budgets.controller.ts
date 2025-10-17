@@ -1,38 +1,25 @@
 import {
-  BadRequestException,
+  Body,
   Controller,
   Get,
-  ParseIntPipe,
   Post,
   Query,
-  Body,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { BudgetsService } from './budgets.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
+import { QueryBudgetDto } from './dto/query-budget.dto';
 
 @UseGuards(JwtAuthGuard)
-@Controller('budgets') // /api/budgets
+@Controller('budgets')
 export class BudgetsController {
   constructor(private readonly budgets: BudgetsService) {}
 
   @Get()
-  list(
-    @Req() req: any,
-    @Query('year', ParseIntPipe) year: number,
-    @Query('month', ParseIntPipe) month: number,
-  ) {
-    if (
-      !Number.isInteger(year) ||
-      !Number.isInteger(month) ||
-      month < 1 ||
-      month > 12
-    ) {
-      throw new BadRequestException('Paramètres year/month invalides');
-    }
-    return this.budgets.list(req.user.sub, year, month);
+  list(@Req() req: any, @Query() q: QueryBudgetDto) {
+    return this.budgets.list(req.user.sub, q.year, q.month);
   }
 
   @Post()

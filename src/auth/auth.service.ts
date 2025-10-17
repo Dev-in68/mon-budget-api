@@ -1,14 +1,10 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable, UnauthorizedException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
+// JWT payload uses `sub` which can be number or string depending on JWT creation
 type JwtPayload = { sub: number | string; email: string };
 
 @Injectable()
@@ -47,8 +43,7 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException('Identifiants invalides');
 
-    if (!user.password)
-      throw new UnauthorizedException('Identifiants invalides');
+    if (!user.password) throw new UnauthorizedException('Identifiants invalides');
 
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) throw new UnauthorizedException('Identifiants invalides');
@@ -56,15 +51,11 @@ export class AuthService {
     return this.tokens(user.id, user.email);
   }
 
-  private async tokens(
-    sub: number | string,
-    email: string,
-  ): Promise<{ access: string; refresh: string }> {
+  private async tokens(sub: number | string, email: string) {
     const payload: JwtPayload = { sub, email };
 
     const jwtSecret = this.cfg.get<string>('JWT_SECRET');
-    if (!jwtSecret)
-      throw new InternalServerErrorException('JWT_SECRET non configuré');
+    if (!jwtSecret) throw new InternalServerErrorException('JWT_SECRET non configuré');
 
     const accessExpires = this.cfg.get<string | number>('JWT_EXPIRES') ?? '15m';
     const refreshExpires =
@@ -72,24 +63,17 @@ export class AuthService {
       this.cfg.get<string | number>('JWT_EXPIRES') ??
       '7d';
 
-    const access = await this.jwt.signAsync(
-      payload as any,
-      {
-        secret: jwtSecret,
-        expiresIn: accessExpires,
-      } as any,
-    );
+    const access = await this.jwt.signAsync(payload as any, {
+      secret: jwtSecret,
+      expiresIn: accessExpires as any,
+    });
 
-    const refreshSecret =
-      this.cfg.get<string>('JWT_REFRESH_SECRET') ?? jwtSecret;
+    const refreshSecret = this.cfg.get<string>('JWT_REFRESH_SECRET') ?? jwtSecret;
 
-    const refresh = await this.jwt.signAsync(
-      payload as any,
-      {
-        secret: refreshSecret,
-        expiresIn: refreshExpires,
-      } as any,
-    );
+    const refresh = await this.jwt.signAsync(payload as any, {
+      secret: refreshSecret,
+      expiresIn: refreshExpires as any,
+    });
 
     return { access, refresh };
   }

@@ -1,13 +1,12 @@
-import { IsInt, Max, Min, IsNumber } from 'class-validator';
+import { IsInt, IsPositive, Max, Min } from 'class-validator';
 
 export class CreateBudgetDto {
-  @IsInt() year: number;
+  @IsInt() year!: number;
 
   @IsInt()
   @Min(1)
   @Max(12)
-  month: number;
+  month!: number;
 
-  @IsNumber()
-  limit: number;
+  @IsPositive() limit!: number;
 }

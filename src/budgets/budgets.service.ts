@@ -1,22 +1,21 @@
+// src/budgets/budgets.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateBudgetDto } from './dto/create-budget.dto';
 
 @Injectable()
 export class BudgetsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list(userId: number, year: number, month: number) {
+  list(userId: number, year: number, month: number) {
     return this.prisma.budget.findMany({
       where: { userId, year, month },
-      orderBy: { id: 'asc' },
+      orderBy: { month: 'asc' }, // ou { createdAt: 'desc' } selon ton besoin
     });
   }
 
-  async create(userId: number, dto: CreateBudgetDto) {
-    const { year, month, limit } = dto;
+  create(userId: number, data: { year: number; month: number; limit: number }) {
     return this.prisma.budget.create({
-      data: { userId, year, month, limit },
+      data: { ...data, userId },
     });
   }
 }
