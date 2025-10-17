@@ -1,102 +1,153 @@
-![CI](https://github.com/Dev-in68/mon-budget-api/actions/workflows/ci.yml/badge.svg)
+﻿![CI](https://github.com/Dev-in68/mon-budget-api/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/github/license/Dev-in68/mon-budget-api)
 ![GitHub issues](https://img.shields.io/github/issues/Dev-in68/mon-budget-api)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Dev-in68/mon-budget-api)
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Mon Budget - Application Complète 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Une application de gestion de budget moderne avec backend NestJS et frontend React.
 
-## Description
+##  Structure du Projet
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Ce dépôt est organisé en monorepo contenant :
 
-## Project setup
+`
+mon-budget-api/
+  src/                 # Backend NestJS
+  prisma/             # Schema et migrations base de données
+  frontend/           # Application React/Vite
+  test/               # Tests backend
+  .github/            # CI/CD workflows
+  docker-compose.yml  # Configuration Docker
+`
 
-```bash
-$ npm install
-```
+##  Démarrage Rapide
 
-## Compile and run the project
+### Backend (API NestJS)
 
-```bash
-# development
-$ npm run start
+`ash
+# Installation des dépendances
+npm install
 
-# watch mode
-$ npm run start:dev
+# Démarrage en mode développement
+npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+# API disponible sur http://localhost:3000
+`
 
-## Run tests
+### Frontend (React + Vite)
 
-```bash
-# unit tests
-$ npm run test
+`ash
+# Navigation vers le frontend
+cd frontend
 
-# e2e tests
-$ npm run test:e2e
+# Installation des dépendances
+npm install
 
-# test coverage
-$ npm run test:cov
-```
+# Démarrage du serveur de développement
+npm run dev
 
-## Deployment
+# Application disponible sur http://localhost:5173
+`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Avec Docker (Recommandé)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+`ash
+# Démarrage de l'ensemble de l'application
+docker-compose up -d
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+# Backend: http://localhost:3000
+# Frontend: http://localhost:5173
+# Base de données: PostgreSQL sur le port 5432
+`
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+##  Technologies
 
-## Resources
+### Backend
+- **NestJS** - Framework Node.js progressif
+- **Prisma** - ORM moderne pour TypeScript
+- **PostgreSQL** - Base de données relationnelle
+- **JWT** - Authentification
+- **Docker** - Conteneurisation
 
-Check out a few resources that may come in handy when working with NestJS:
+### Frontend
+- **React 18** - Bibliothèque UI
+- **TypeScript** - Typage statique
+- **Vite** - Build tool moderne
+- **TailwindCSS** - Framework CSS utilitaire
+- **React Router** - Navigation
+- **Recharts** - Graphiques et visualisations
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+##  Fonctionnalités
 
-## Support
+-  Authentification utilisateur (JWT)
+-  Gestion des transactions (revenus/dépenses)
+-  Catégorisation des transactions
+-  Tableaux de bord avec graphiques
+-  Filtres par période et catégorie
+-  Interface responsive
+-  Mode sombre/clair
+-  API REST documentée
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+##  Tests
 
-## Stay in touch
+### Backend
+`ash
+# Tests unitaires
+npm run test
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Tests e2e
+npm run test:e2e
 
-## License
+# Couverture
+npm run test:cov
+`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Frontend
+`ash
+cd frontend
+
+# Tests avec Vitest
+npm run test
+
+# Tests en mode watch
+npm run test:watch
+`
+
+##  Déploiement
+
+### Variables d'environnement
+
+Copiez les fichiers d'exemple et configurez vos variables :
+
+`ash
+# Backend
+cp .env.example .env
+
+# Frontend
+cd frontend
+cp .env.example .env
+`
+
+### Production
+
+`ash
+# Build backend
+npm run build
+
+# Build frontend
+cd frontend
+npm run build
+`
+
+##  Contribution
+
+Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour les guidelines de contribution.
+
+##  License
+
+MIT - voir [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+**Développé avec  par Dev-in68**
