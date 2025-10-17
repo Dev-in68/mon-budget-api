@@ -12,7 +12,18 @@ async function bootstrap() {
 
   // Sécurité
   app.use(helmet());
-  app.enableCors();
+  
+  // CORS configuration pour permettre le frontend
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Vite dev server
+      'http://localhost:4173', // Vite preview
+      'http://localhost:3000', // Si frontend build servi sur :3000
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   // Validation globale
   app.useGlobalPipes(

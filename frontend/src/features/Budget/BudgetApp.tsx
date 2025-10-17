@@ -4,6 +4,7 @@ import { Header } from "@/components/Budget/Header";
 import { KPICards } from "@/components/Budget/KPICards";
 import { Filters } from "@/components/Budget/Filters";
 import { TransactionsCard } from "@/components/Budget/transactions/TransactionsCard";
+import { ApiTestComponent } from "@/components/ui/ApiTestComponent";
 
 import { CashflowLine } from "@/components/Charts/CashflowLine";
 import { RevenueExpenseBar } from "@/components/Charts/RevenueExpenseBar";
@@ -139,6 +140,9 @@ export default function BudgetApp() {
 
       {/* CONTENT */}
       <main className="mx-auto max-w-md space-y-4 px-4 py-4 md:max-w-3xl lg:max-w-6xl">
+        {/* Test API Connection */}
+        <ApiTestComponent />
+
         {/* KPIs */}
         <KPICards
           revenus={summary.revenus}

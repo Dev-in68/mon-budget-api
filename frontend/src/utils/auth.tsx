@@ -65,6 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         token: tokens.accessToken,
       });
       setUser({ email: me.email });
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -73,8 +76,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = async (email: string, password: string) => {
     setLoading(true);
     try {
-      await postJson("/auth/signup", { email, password });
+      await postJson("/auth/register", { email, password });
       await signIn(email, password);
+    } catch (error) {
+      console.error('Erreur d\'inscription:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
