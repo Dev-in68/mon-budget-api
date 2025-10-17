@@ -16,10 +16,10 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/budgets (GET) should be protected', () => {
+    // tests create the app without the global prefix from main.ts, so call '/budgets'
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .get('/budgets?year=2025&month=10')
+      .expect(401);
   });
 });
