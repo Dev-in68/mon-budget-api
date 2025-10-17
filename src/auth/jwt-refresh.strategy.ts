@@ -8,9 +8,10 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor() {
+    const secret = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret';
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_REFRESH_SECRET,
+      secretOrKey: secret,
     });
   }
   async validate(payload: any) {

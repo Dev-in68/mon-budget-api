@@ -8,10 +8,11 @@ type JwtPayload = { sub: number; email: string };
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(cfg: ConfigService) {
+    const secret = cfg.get<string>('JWT_SECRET') || 'fallback-secret';
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: cfg.get<string>('JWT_SECRET'),
+      secretOrKey: secret,
     });
   }
 
