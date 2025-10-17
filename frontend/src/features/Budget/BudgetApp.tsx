@@ -28,25 +28,8 @@ export default function BudgetApp() {
     transactions: [],
   });
 
-  // ---- Simule ton utilisateur & actions de compte (remplace par ton auth réel) ----
-  const userEmail = "anthony@orange.fr";
-  const logout = () => {
-    // TODO: déconnexion réelle
-    console.log("logout");
-  };
-  const goChangePassword = () => {
-    // TODO: ouvrir une modale ou router vers une page
-    console.log("change password");
-  };
-  const handleSignOut = () => {
-    // -> remplace par ton vrai logout
-    localStorage.clear();
-    window.location.reload();
-  };
-  const handleChangePassword = () => {
-    // -> remplace par une navigation/modale vers la page Changer le mot de passe
-    alert("Aller vers: /account/password (à brancher sur ton routeur)");
-  };
+  // ---- Simule ton utilisateur & actions de compte (supprimé car on utilise useAuth maintenant) ----
+  // Toute la logique d'authentification est maintenant dans useAuth()
   // -------------------------------------------------------------------------------
 
   // Load current month
@@ -152,9 +135,6 @@ export default function BudgetApp() {
         year={year}
         setMonth={setMonth}
         setYear={setYear}
-        userEmail={userEmail}
-        onSignOut={logout}
-        onChangePassword={goChangePassword}
       />
 
       {/* CONTENT */}

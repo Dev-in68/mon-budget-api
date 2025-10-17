@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "@/index.css";
 import LoginPage from "./Pages/LoginPage";
-import Protected from "./Pages/Protected";
+import { Protected } from "./utils/auth";
 import PasswordPage from "./Pages/PasswordPage";
 import BudgetApp from "./features/Budget/BudgetApp";
 import { AuthProvider } from "./utils/auth";

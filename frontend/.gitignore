@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# TypeScript build files
+*.d.ts
+*.js
+*.tsbuildinfo
+src/**/*.d.ts
+src/**/*.js
