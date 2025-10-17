@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "composite": true, // <- OBLIGATOIRE aussi ici
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"]
+  },
+  "include": ["vite.config.*"]
+}

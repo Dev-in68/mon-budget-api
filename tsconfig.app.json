@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "composite": true, // <- OBLIGATOIRE avec project references
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM"],
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "vite.config.*", "env.d.ts"]
+}
