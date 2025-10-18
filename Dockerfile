@@ -1,29 +1,28 @@
-# Dockerfile optimisé pour Railway
-FROM node:20-alpine
+# Dockerfile optimisé Railway - Build séparé
+FROM node:20-alpine AS builder
 
-# Installer les dépendances système pour Prisma
 RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Copier les fichiers de package
 COPY package*.json ./
-COPY prisma ./prisma
-
-# Installer TOUTES les dépendances (dev incluses pour le build)
 RUN npm ci
 
-# Copier le code source
 COPY . .
-
-# Construire l'application SANS générer Prisma (qui nécessite DATABASE_URL)
 RUN npx @nestjs/cli build
 
-# Exposer le port (Railway utilise PORT env variable)
-EXPOSE $PORT
+# Stage Runtime
+FROM node:20-alpine
 
-# Variables d'environnement par défaut
+RUN apk add --no-cache openssl
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/prisma ./prisma
+
+EXPOSE $PORT
 ENV NODE_ENV=production
 
-# Script de démarrage avec génération Prisma au runtime
-CMD ["sh", "-c", "echo 'Runtime setup...' && export DATABASE_URL=\"postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}\" && echo 'DATABASE_URL:' $DATABASE_URL && npx prisma generate && npx prisma db push --accept-data-loss && echo 'Starting app...' && node dist/src/main.js"]
+CMD ["sh", "-c", "echo '🚀 STARTING...' && export DATABASE_URL=\"postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}\" && echo '📍 DB:' $DATABASE_URL && npx prisma generate && npx prisma db push --accept-data-loss && echo '✅ READY!' && node dist/src/main.js"]
