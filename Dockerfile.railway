@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage avec debugging DATABASE_URL
-CMD ["sh", "-c", "echo 'Starting app...' && echo 'All ENV vars:' && env | grep -E '(DATABASE|POSTGRES)' && sleep 2 && node dist/src/main.js"]
+# Script de démarrage avec DATABASE_URL construite manuellement
+CMD ["sh", "-c", "echo 'Building DATABASE_URL...' && export DATABASE_URL=\"postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE\" && echo 'DATABASE_URL:' $DATABASE_URL && node dist/src/main.js"]
