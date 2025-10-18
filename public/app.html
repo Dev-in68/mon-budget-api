@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Budget App - Interface Interactive</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-glass: rgba(30, 41, 59, 0.8);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(148, 163, 184, 0.2);
+      --radius: 0.5rem;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, var(--accent), var(--success));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .auth-section {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .income { color: var(--success); }
+    .expense { color: var(--danger); }
+    .balance { color: var(--accent); }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+
+    .message.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+
+    .transactions-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--border);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💰 Mon Budget App</h1>
+      <p>Interface Interactive avec API</p>
+    </div>
+
+    <div id="messages"></div>
+
+    <!-- Section Authentification -->
+    <div id="auth-section" class="auth-section">
+      <div class="glass" style="flex: 1;">
+        <h3>🔐 Connexion</h3>
+        <form id="login-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" value="demo@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" id="login-password" value="password123" required>
+          </div>
+          <button type="submit" class="btn">Se connecter</button>
+        </form>
+      </div>
+      
+      <div class="glass" style="flex: 1;">
+        <h3>📝 Inscription</h3>
+        <form id="register-form">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" id="register-name" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" id="register-password" required>
+          </div>
+          <button type="submit" class="btn">S'inscrire</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Section Dashboard -->
+    <div id="dashboard-section" class="hidden">
+      <div class="glass">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>👤 Tableau de bord</h3>
+          <button id="logout-btn" class="btn btn-secondary">Déconnexion</button>
+        </div>
+        <p id="user-info"></p>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value income" id="total-income">0 €</div>
+          <div class="stat-label">Revenus totaux</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value expense" id="total-expenses">0 €</div>
+          <div class="stat-label">Dépenses totales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value balance" id="balance">0 €</div>
+          <div class="stat-label">Solde</div>
+        </div>
+      </div>
+
+      <!-- Transactions -->
+      <div class="glass">
+        <h3>📊 Dernières transactions</h3>
+        <div id="transactions-container">
+          <div class="loading">
+            <div class="spinner"></div>
+            Chargement des transactions...
+          </div>
+        </div>
+      </div>
+
+      <!-- Budgets -->
+      <div class="glass">
+        <h3>💼 Budgets</h3>
+        <div id="budgets-container">
+          <div class="loading">
+            <div class="spinner"></div>
+            Chargement des budgets...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api';
+    let authToken = localStorage.getItem('auth_token');
+
+    // Messages
+    function showMessage(text, type = 'success') {
+      const messagesContainer = document.getElementById('messages');
+      const message = document.createElement('div');
+      message.className = `message ${type}`;
+      message.textContent = text;
+      messagesContainer.appendChild(message);
+      
+      setTimeout(() => {
+        message.remove();
+      }, 5000);
+    }
+
+    // API Helpers
+    async function apiCall(endpoint, options = {}) {
+      const url = `${API_BASE}${endpoint}`;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
+          ...options.headers
+        },
+        ...options
+      };
+
+      try {
+        const response = await fetch(url, config);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Erreur API');
+        }
+        
+        return data;
+      } catch (error) {
+        showMessage(error.message, 'error');
+        throw error;
+      }
+    }
+
+    // Authentification
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      try {
+        const response = await apiCall('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        
+        authToken = response.access_token;
+        localStorage.setItem('auth_token', authToken);
+        showMessage('Connexion réussie !');
+        showDashboard();
+      } catch (error) {
+        console.error('Erreur de connexion:', error);
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      
+      try {
+        const response = await apiCall('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ name, email, password })
+        });
+        
+        authToken = response.access_token;
+        localStorage.setItem('auth_token', authToken);
+        showMessage('Inscription réussie !');
+        showDashboard();
+      } catch (error) {
+        console.error('Erreur d\'inscription:', error);
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      authToken = null;
+      localStorage.removeItem('auth_token');
+      showAuth();
+      showMessage('Déconnexion réussie');
+    });
+
+    // Interface
+    function showAuth() {
+      document.getElementById('auth-section').classList.remove('hidden');
+      document.getElementById('dashboard-section').classList.add('hidden');
+    }
+
+    function showDashboard() {
+      document.getElementById('auth-section').classList.add('hidden');
+      document.getElementById('dashboard-section').classList.remove('hidden');
+      loadDashboardData();
+    }
+
+    // Données du dashboard
+    async function loadDashboardData() {
+      try {
+        // Charger les informations utilisateur
+        const user = await apiCall('/users/me');
+        document.getElementById('user-info').textContent = `Bienvenue, ${user.name} (${user.email})`;
+
+        // Charger les budgets
+        const budgets = await apiCall('/budgets');
+        displayBudgets(budgets);
+
+        // Statistiques simulées (à implémenter dans l'API)
+        updateStats();
+        
+        showMessage('Données chargées avec succès');
+      } catch (error) {
+        console.error('Erreur de chargement:', error);
+      }
+    }
+
+    function displayBudgets(budgets) {
+      const container = document.getElementById('budgets-container');
+      
+      if (budgets.length === 0) {
+        container.innerHTML = '<p>Aucun budget trouvé</p>';
+        return;
+      }
+
+      container.innerHTML = budgets.map(budget => `
+        <div class="transaction-item">
+          <div>
+            <strong>Budget ${budget.month}/${budget.year}</strong>
+          </div>
+          <div class="balance">${budget.limit} €</div>
+        </div>
+      `).join('');
+    }
+
+    function updateStats() {
+      // Statistiques fictives pour la démonstration
+      document.getElementById('total-income').textContent = '3500 €';
+      document.getElementById('total-expenses').textContent = '1350 €';
+      document.getElementById('balance').textContent = '2150 €';
+      
+      // Simuler les transactions
+      const transactionsContainer = document.getElementById('transactions-container');
+      transactionsContainer.innerHTML = `
+        <div class="transaction-item">
+          <div>
+            <strong>Salaire mensuel</strong><br>
+            <small>15/10/2025</small>
+          </div>
+          <div class="income">+3500 €</div>
+        </div>
+        <div class="transaction-item">
+          <div>
+            <strong>Loyer</strong><br>
+            <small>16/10/2025</small>
+          </div>
+          <div class="expense">-800 €</div>
+        </div>
+        <div class="transaction-item">
+          <div>
+            <strong>Courses alimentaires</strong><br>
+            <small>20/10/2025</small>
+          </div>
+          <div class="expense">-350 €</div>
+        </div>
+      `;
+    }
+
+    // Test de santé de l'API
+    async function checkApiHealth() {
+      try {
+        await fetch(`${API_BASE}/auth/health`);
+        showMessage('API connectée et fonctionnelle');
+      } catch (error) {
+        showMessage('Impossible de se connecter à l\'API', 'error');
+      }
+    }
+
+    // Initialisation
+    if (authToken) {
+      showDashboard();
+    } else {
+      showAuth();
+    }
+
+    // Test de santé au chargement
+    checkApiHealth();
+  </script>
+</body>
+</html>
