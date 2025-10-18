@@ -1,36 +1,32 @@
-# Image Node.js Alpine standard (accepter 1 vulnérabilité mineure)
-FROM node:20-alpine AS production
+# Dockerfile optimisé pour Railway
+FROM node:20-alpine
 
-# Installer OpenSSL pour Prisma
+# Installer les dépendances système pour Prisma
 RUN apk add --no-cache openssl
 
 WORKDIR /app
 
 # Copier les fichiers de package
-COPY package.json ./
+COPY package*.json ./
 COPY prisma ./prisma
 
-# Installer toutes les dépendances (prod + dev pour Prisma)
-RUN npm install --production=false
+# Installer TOUTES les dépendances (dev incluses pour le build)
+RUN npm ci
 
 # Copier le code source
 COPY . .
 
-# Construire l'application directement (sans générer Prisma d'abord)
-RUN npx @nestjs/cli build
+# Générer le client Prisma
+RUN npx prisma generate
 
-# Nettoyer les dev dependencies après le build
-RUN npm prune --production
+# Construire l'application
+RUN npm run build
 
-# Réinstaller Prisma CLI pour la production
-RUN npm install prisma@5.0.0
+# Exposer le port (Railway utilise PORT env variable)
+EXPOSE $PORT
 
-# Exposer le port
-EXPOSE 3000
+# Variables d'environnement par défaut
+ENV NODE_ENV=production
 
-# Script de démarrage avec Prisma generate
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
-
-# Commande de démarrage
-CMD ["/app/start.sh"]
+# Script de démarrage
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
