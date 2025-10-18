@@ -1,0 +1,26 @@
+2025-10-18 15:55:15 - Demarrage de la sauvegarde de la base de donnees...
+2025-10-18 15:55:15 - Dossier de sauvegarde cree: status
+2025-10-18 15:55:15 - Sauvegarde de la base de donnees terminee: status\database_backup_2025-10-18_15-55-15.sql (0 bytes)
+2025-10-18 15:55:15 - Sauvegarde des fichiers de configuration...
+2025-10-18 15:55:15 - Fichier sauvegarde: docker-compose.prod.yml
+2025-10-18 15:55:15 - Fichier sauvegarde: .env.production
+2025-10-18 15:55:15 - Fichier sauvegarde: Dockerfile
+2025-10-18 15:55:15 - Fichier sauvegarde: nginx\nginx.conf
+2025-10-18 15:55:15 - Sauvegarde de configuration terminee: status\config_backup_2025-10-18_15-55-15
+2025-10-18 15:55:15 - SUCCES: Toutes les sauvegardes sont terminees
+2025-10-18 15:55:15 - Nettoyage des anciennes sauvegardes (> 7 jours)...
+2025-10-18 15:55:16 - Nettoyage termine
+2025-10-18 15:55:23 - Demarrage de la sauvegarde de la base de donnees...
+2025-10-18 15:55:23 - Dossier de sauvegarde cree: help
+2025-10-18 15:55:23 - Sauvegarde de la base de donnees terminee: help\database_backup_2025-10-18_15-55-23.sql (0 bytes)
+2025-10-18 15:55:23 - Sauvegarde des fichiers de configuration...
+2025-10-18 15:55:23 - Fichier sauvegarde: docker-compose.prod.yml
+2025-10-18 15:55:23 - Fichier sauvegarde: .env.production
+2025-10-18 15:55:23 - Fichier sauvegarde: Dockerfile
+2025-10-18 15:55:23 - Fichier sauvegarde: nginx\nginx.conf
+2025-10-18 15:55:23 - Sauvegarde de configuration terminee: help\config_backup_2025-10-18_15-55-23
+2025-10-18 15:55:23 - SUCCES: Toutes les sauvegardes sont terminees
+2025-10-18 15:55:23 - Nettoyage des anciennes sauvegardes (> 7 jours)...
+2025-10-18 15:55:23 - Nettoyage termine
+2025-10-18 15:56:59 - Demarrage de la sauvegarde de la base de donnees...
+2025-10-18 15:56:59 - Dossier de sauvegarde cree: .\backups

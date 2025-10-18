@@ -1,0 +1,28 @@
+# Configuration MySQL sécurisée pour production
+[mysqld]
+# Sécurité
+bind-address = 0.0.0.0
+skip-name-resolve
+secure-file-priv = /var/lib/mysql-files/
+
+# Performance
+innodb_buffer_pool_size = 256M
+innodb_log_file_size = 64M
+max_connections = 100
+query_cache_size = 64M
+query_cache_limit = 2M
+
+# Logging
+log_error = /var/log/mysql/error.log
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/slow.log
+long_query_time = 2
+
+# Character set
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+# SSL (à configurer avec vos certificats)
+# ssl-ca = /etc/mysql/ssl/ca-cert.pem
+# ssl-cert = /etc/mysql/ssl/server-cert.pem
+# ssl-key = /etc/mysql/ssl/server-key.pem

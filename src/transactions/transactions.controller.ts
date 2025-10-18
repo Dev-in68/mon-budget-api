@@ -29,14 +29,14 @@ export class TransactionsController {
       const m = Number(month);
       const from = new Date(Date.UTC(y, m - 1, 1));
       const to = new Date(Date.UTC(y, m, 1));
-      return this.tx.list(req.user.userId, from, to);
+      return this.tx.list(req.user.sub, from, to);
     }
-    return this.tx.list(req.user.userId);
+    return this.tx.list(req.user.sub);
   }
   @Post() create(@Req() req: any, @Body() dto: CreateTransactionDto) {
-    return this.tx.create(req.user.userId, dto);
+    return this.tx.create(req.user.sub, dto);
   }
   @Delete(':id') del(@Req() req: any, @Param('id', ParseIntPipe) id: number) {
-    return this.tx.delete(req.user.userId, id);
+    return this.tx.delete(req.user.sub, id);
   }
 }

@@ -20,7 +20,8 @@ async function main() {
   });
   console.log('✅ Utilisateur demo créé:', user.email);
 
-  // Créer des catégories
+  // Nettoyer les données existantes dans l'ordre correct (contraintes de clés étrangères)
+  await prisma.transaction.deleteMany({ where: { userId: user.id } });
   await prisma.category.deleteMany({ where: { userId: user.id } });
   
   const categoryData = [

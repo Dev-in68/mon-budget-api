@@ -1,5 +1,4 @@
-# Image Node.js Alpine standard (accepter 1 vulnérabilité mineure)
-FROM node:20-alpine AS production
+FROM node:20 AS production
 
 WORKDIR /app
 

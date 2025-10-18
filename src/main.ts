@@ -3,15 +3,24 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Préfixe global
+  // Servir les fichiers statiques depuis le dossier public
+  app.useStaticAssets(join(__dirname, '..', '..', 'public'), {
+    prefix: '/',
+  });
+
+  // Préfixe global pour l'API
   app.setGlobalPrefix('api');
 
   // Sécurité
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: false, // Désactiver CSP pour le frontend
+  }));
   
   // CORS configuration pour permettre le frontend
   app.enableCors({

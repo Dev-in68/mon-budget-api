@@ -1,0 +1,77 @@
+# ==============================================
+# DOCKERFILE MULTI-STAGE - PRODUCTION
+# Mon Budget API - Build optimisé et sécurisé
+# ==============================================
+
+# Stage 1: Base Node.js Alpine (accepter vulnérabilité mineure)
+FROM node:20-alpine AS base
+WORKDIR /app
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001 -G nodejs
+COPY package*.json ./
+
+# Stage 2: Dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat python3 make g++
+RUN npm ci --only=production && npm cache clean --force
+
+# Stage 3: Builder
+FROM base AS builder
+RUN apk add --no-cache libc6-compat python3 make g++
+COPY package*.json ./
+COPY prisma ./prisma
+RUN npm ci
+RUN npx prisma generate
+COPY . .
+RUN npm run build
+
+# Stage 4: Production runner
+FROM node:20-alpine AS production
+WORKDIR /app
+
+# Sécurité: Créer utilisateur non-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001 -G nodejs
+
+# Installer uniquement les dépendances nécessaires
+RUN apk add --no-cache \
+    curl \
+    dumb-init \
+    && rm -rf /var/cache/apk/*
+
+# Copier les dépendances
+COPY --from=deps --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nestjs:nodejs /app/public ./public
+
+# Copier les fichiers de configuration
+COPY --chown=nestjs:nodejs package*.json ./
+COPY --chown=nestjs:nodejs prisma/schema.prisma ./prisma/
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /app/logs && chown -R nestjs:nodejs /app/logs
+RUN mkdir -p /app/uploads && chown -R nestjs:nodejs /app/uploads
+
+# Générer le client Prisma
+RUN npx prisma generate
+
+# Exposer le port
+EXPOSE 3000
+
+# Utiliser l'utilisateur non-root
+USER nestjs
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+# Point d'entrée sécurisé avec dumb-init
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/main.js"]
+
+# Métadonnées
+LABEL maintainer="Mon Budget API Team"
+LABEL version="1.0.0"
+LABEL description="Mon Budget API - Production Ready"
+LABEL org.opencontainers.image.source="https://github.com/Dev-in68/mon-budget-api"
