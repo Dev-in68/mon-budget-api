@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage MINIMAL pour test
-CMD ["sh", "-c", "echo 'Starting app...' && echo 'DATABASE_URL exists:' && test -n \"$DATABASE_URL\" && echo 'YES' || echo 'NO' && node dist/src/main.js"]
+# Script de démarrage avec debugging DATABASE_URL
+CMD ["sh", "-c", "echo 'Starting app...' && echo 'All ENV vars:' && env | grep -E '(DATABASE|POSTGRES)' && sleep 2 && node dist/src/main.js"]
