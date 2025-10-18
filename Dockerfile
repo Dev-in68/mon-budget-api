@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage optimisé pour Railway
-CMD ["sh", "-c", "echo 'Starting application...' && echo 'DATABASE_URL:' && echo $DATABASE_URL && npx prisma db push --accept-data-loss && node dist/src/main.js"]
+# Script de démarrage simplifié
+CMD ["sh", "-c", "echo 'Starting app...' && echo 'DB URL:' $DATABASE_URL && sleep 5 && npx prisma db push --force-reset && echo 'DB ready!' && node dist/src/main.js"]
