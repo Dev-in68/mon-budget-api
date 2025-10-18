@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=mysql://budget_user:${MYSQL_PASSWORD}@db:3306/budget_production
+      - DATABASE_URL=postgresql://budget_user:${POSTGRES_PASSWORD}@db:5432/budget_production
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - JWT_EXPIRES=15m
@@ -38,41 +38,28 @@ services:
       retries: 3
       start_period: 40s
 
-  # Base de données MySQL
+  # Base de données PostgreSQL
   db:
-    image: mysql:8.0
-    container_name: budget-mysql-prod
+    image: postgres:15-alpine
+    container_name: budget-postgres-prod
     restart: unless-stopped
     environment:
-      - MYSQL_DATABASE=budget_production
-      - MYSQL_USER=budget_user
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_CHARSET=utf8mb4
-      - MYSQL_COLLATION=utf8mb4_unicode_ci
+      - POSTGRES_DB=budget_production
+      - POSTGRES_USER=budget_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - mysql-data:/var/lib/mysql
-      - mysql-config:/etc/mysql/conf.d
+      - postgres-data:/var/lib/postgresql/data
       - ./backup:/backup
-      - ./scripts/mysql-secure.cnf:/etc/mysql/conf.d/secure.cnf:ro
     ports:
-      - "127.0.0.1:3306:3306"  # Bind uniquement sur localhost
+      - "127.0.0.1:5432:5432"  # Bind uniquement sur localhost
     networks:
       - budget-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD-SHELL", "pg_isready -U budget_user -d budget_production"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
-    security_opt:
-      - seccomp:unconfined
-    command: >
-      --default-authentication-plugin=mysql_native_password
-      --bind-address=0.0.0.0
-      --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
-      --max-connections=100
-      --innodb-buffer-pool-size=256M
 
   # Reverse Proxy Nginx
   nginx:
@@ -134,12 +121,9 @@ networks:
     name: budget-prod-network
 
 volumes:
-  mysql-data:
+  postgres-data:
     driver: local
-    name: budget-mysql-data
-  mysql-config:
-    driver: local
-    name: budget-mysql-config
+    name: budget-postgres-data
   app-logs:
     driver: local
     name: budget-app-logs
