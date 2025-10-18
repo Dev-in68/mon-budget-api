@@ -16,11 +16,8 @@ RUN npm ci
 # Copier le code source
 COPY . .
 
-# Générer le client Prisma
-RUN npx prisma generate
-
-# Construire l'application
-RUN npm run build
+# Construire l'application SANS générer Prisma (qui nécessite DATABASE_URL)
+RUN npx @nestjs/cli build
 
 # Exposer le port (Railway utilise PORT env variable)
 EXPOSE $PORT
@@ -28,5 +25,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage avec variables PostgreSQL correctes
-CMD ["sh", "-c", "echo 'Constructing DATABASE_URL...' && export DATABASE_URL=\"postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}\" && echo 'Using URL:' $DATABASE_URL && node dist/src/main.js"]
+# Script de démarrage avec génération Prisma au runtime
+CMD ["sh", "-c", "echo 'Runtime setup...' && export DATABASE_URL=\"postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}\" && echo 'DATABASE_URL:' $DATABASE_URL && npx prisma generate && npx prisma db push --accept-data-loss && echo 'Starting app...' && node dist/src/main.js"]
