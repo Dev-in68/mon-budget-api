@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
+# Script de démarrage avec gestion d'erreurs
+CMD ["sh", "-c", "echo 'Starting application...' && echo 'DATABASE_URL check:' && echo $DATABASE_URL && npx prisma db push && npx prisma generate && node dist/src/main.js"]
