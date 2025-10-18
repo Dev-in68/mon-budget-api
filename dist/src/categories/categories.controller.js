@@ -22,13 +22,13 @@ let CategoriesController = class CategoriesController {
         this.categories = categories;
     }
     list(req) {
-        return this.categories.list(req.user.userId);
+        return this.categories.list(req.user.sub);
     }
     create(req, dto) {
-        return this.categories.create(req.user.userId, dto);
+        return this.categories.create(req.user.sub, dto);
     }
     remove(req, id) {
-        return this.categories.remove(req.user.userId, id);
+        return this.categories.remove(req.user.sub, id);
     }
 };
 exports.CategoriesController = CategoriesController;
