@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Variables d'environnement par défaut
 ENV NODE_ENV=production
 
-# Script de démarrage simplifié
-CMD ["sh", "-c", "echo 'Starting app...' && echo 'DB URL:' $DATABASE_URL && sleep 5 && npx prisma db push --force-reset && echo 'DB ready!' && node dist/src/main.js"]
+# Script de démarrage MINIMAL pour test
+CMD ["sh", "-c", "echo 'Starting app...' && echo 'DATABASE_URL exists:' && test -n \"$DATABASE_URL\" && echo 'YES' || echo 'NO' && node dist/src/main.js"]
