@@ -6,3 +6,4 @@ npm-debug.log
 README.md
 docker-compose*.yml
 .env.production
+prisma/migrations
