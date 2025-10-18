@@ -84,6 +84,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx-simple.conf:/etc/nginx/nginx.conf:ro
+      - ./public:/usr/share/nginx/html:ro
       - nginx-logs:/var/log/nginx
     depends_on:
       - app

@@ -1,6 +1,9 @@
 # Image Node.js Alpine standard (accepter 1 vulnérabilité mineure)
 FROM node:20-alpine AS production
 
+# Installer OpenSSL pour Prisma
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Copier les fichiers de package
@@ -26,7 +29,7 @@ RUN npm install prisma@5.0.0
 EXPOSE 3000
 
 # Script de démarrage avec Prisma generate
-RUN echo '#!/bin/sh\necho "Starting application..."\nif [ "$DATABASE_URL" ]; then\n  echo "Generating Prisma client..."\n  npx prisma generate || echo "Prisma generate failed, continuing..."\nfi\nnode dist/src/main.js' > /app/start.sh
+COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 # Commande de démarrage
