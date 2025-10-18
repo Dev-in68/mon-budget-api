@@ -13,6 +13,8 @@ services:
       dockerfile: Dockerfile
     container_name: budget-api-prod
     restart: unless-stopped
+    env_file:
+      - .env.local
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://budget_user:${POSTGRES_PASSWORD}@db:5432/budget_production
